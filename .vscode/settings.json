@@ -3,5 +3,19 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "localhost",
     "projectKey": "cata-tenis-ts"
-  }
+  },
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "markdown"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true
 }
