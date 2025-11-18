@@ -4,7 +4,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "sonar": "sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqp_dfb5795954935800dcc401821056dea4adb17431 -Dsonar.projectKey=cata-tenis-ts"
   },
   "devDependencies": {
     "@types/jest": "^27.0.0",

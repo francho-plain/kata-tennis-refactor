@@ -1,0 +1,7 @@
+{
+  "sonarlint.connectedMode.enabled": true,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "localhost",
+    "projectKey": "cata-tenis-ts"
+  }
+}

@@ -10,3 +10,10 @@ tests_build
 coverage
 
 .DS_Store
+# SonarQube/SonarLint
+.sonarlint/
+.sonar/
+.scannerwork/
+sonar-report.json
+sonar-scanner.log
+.sonar_lock
