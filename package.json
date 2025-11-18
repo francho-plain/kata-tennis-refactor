@@ -5,14 +5,23 @@
     "test": "jest",
     "build": "tsc",
     "test:coverage": "jest --coverage",
-    "sonar": "sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqp_dfb5795954935800dcc401821056dea4adb17431 -Dsonar.projectKey=cata-tenis-ts"
+    "sonar": "npm run lint:report; sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqp_dfb5795954935800dcc401821056dea4adb17431 -Dsonar.projectKey=cata-tenis-ts",
+    "lint": "eslint . --ext .ts,.js,.json,.md",
+    "lint:report": "eslint . --ext .ts,.js,.json,.md -f json -o eslint-report.json"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@eslint/json": "^0.14.0",
+    "@eslint/markdown": "^7.5.1",
     "@types/jest": "^27.0.0",
     "@types/node": "^10.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
     "jest": "^27.0.0",
+    "jiti": "^2.6.1",
     "ts-jest": "^27.0.0",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.2",
+    "typescript-eslint": "^8.47.0"
   }
 }

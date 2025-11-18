@@ -17,3 +17,5 @@ coverage
 sonar-report.json
 sonar-scanner.log
 .sonar_lock
+
+eslint-report.json
