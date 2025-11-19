@@ -1,5 +1,9 @@
 import { TennisGame } from './TennisGame';
 
+const EVEN_SCORES = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+const WINNING_SCORE: number = 3;
+
+
 export class TennisGame1 implements TennisGame {
   private m_score1: number = 0;
   private m_score2: number = 0;
@@ -14,16 +18,16 @@ export class TennisGame1 implements TennisGame {
   wonPoint(playerName: string): void {
     if (playerName === this.player1Name) {
       this.m_score1 += 1;
-    } 
-    
-    if(playerName === this.player2Name) {
+    }
+
+    if (playerName === this.player2Name) {
       this.m_score2 += 1;
     }
   }
 
   getScore(): string {
-    return this.getEvenScore(this.m_score1) 
-      || this.getAdvantageOrWinScore(this.m_score1, this.m_score2) 
+    return this.getEvenScore(this.m_score1)
+      || this.getAdvantageOrWinScore(this.m_score1, this.m_score2)
       || this.getNormalScore(this.m_score1, this.m_score2);
   }
 
@@ -32,8 +36,7 @@ export class TennisGame1 implements TennisGame {
       return false
     }
 
-    const EVEN_SCORES = [ 'Love-All', 'Fifteen-All', 'Thirty-All' ];
-    return EVEN_SCORES[score] || 'Deuce';
+    return score < WINNING_SCORE ? `${EVEN_SCORES[score]}-All` : 'Deuce';
   }
 
   private getNormalScore(score1: number, score2: number): string {
@@ -41,30 +44,18 @@ export class TennisGame1 implements TennisGame {
   }
 
   private getScoreName(score: number): string {
-    switch (score) {
-      case 0:
-        return 'Love';
-      case 1:
-        return 'Fifteen';
-      case 2:
-        return 'Thirty';
-      case 3:
-        return 'Forty';
-      default:
-        return '';
-    }
+    return EVEN_SCORES[score] || '';
   }
 
   private getAdvantageOrWinScore(score1: number, score2: number): string | false {
-    const WINNING_SCORE: number = 4;
 
-    if (this.m_score1 < WINNING_SCORE && this.m_score2 < WINNING_SCORE) {
+    if (this.m_score1 <= WINNING_SCORE && this.m_score2 <= WINNING_SCORE) {
       return false
     }
     const minusResult = score1 - score2;
-    if (minusResult === 1) {return 'Advantage player1';}
-    if (minusResult === -1) {return 'Advantage player2';}
-    if (minusResult >= 2) {return 'Win for player1';}
+    if (minusResult === 1) { return 'Advantage player1'; }
+    if (minusResult === -1) { return 'Advantage player2'; }
+    if (minusResult >= 2) { return 'Win for player1'; }
     return 'Win for player2';
   }
 }
