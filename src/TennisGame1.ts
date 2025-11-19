@@ -31,16 +31,9 @@ export class TennisGame1 implements TennisGame {
     if (this.m_score1 !== this.m_score2) {
       return false
     }
-    switch (score) {
-      case 0:
-        return 'Love-All';
-      case 1:
-        return 'Fifteen-All';
-      case 2:
-        return 'Thirty-All';
-      default:
-        return 'Deuce';
-    }
+
+    const EVEN_SCORES = [ 'Love-All', 'Fifteen-All', 'Thirty-All' ];
+    return EVEN_SCORES[score] || 'Deuce';
   }
 
   private getNormalScore(score1: number, score2: number): string {
