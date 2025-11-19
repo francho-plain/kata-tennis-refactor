@@ -7,7 +7,8 @@
     "test:coverage": "jest --coverage",
     "sonar": "npm run lint:report; sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqp_dfb5795954935800dcc401821056dea4adb17431 -Dsonar.projectKey=cata-tenis-ts",
     "lint": "eslint . --ext .ts,.js,.json,.md",
-    "lint:report": "eslint . --ext .ts,.js,.json,.md -f json -o eslint-report.json"
+    "lint:report": "eslint . --ext .ts,.js,.json,.md -f json -o eslint-report.json",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -27,6 +28,7 @@
     "eslint-plugin-sonarjs": "^3.0.5",
     "eslint-plugin-unicorn": "^62.0.0",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "jest": "^27.0.0",
     "jiti": "^2.6.1",
     "ts-jest": "^27.0.0",
