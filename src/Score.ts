@@ -4,7 +4,6 @@ const WINNING_SCORE: number = 3;
 const getScoreName = (score: number):string => EVEN_SCORES[score] || '';
 
 
-
 export class Score {
   private player1Score: number ;
   private player2Score: number ;
@@ -40,14 +39,17 @@ export class Score {
   }
 
   private getAdvantageOrWinScore(): string | null {
+    const ADVANTAGE_PLAYER_1 = 1
+    const ADVANTAGE_PLAYER_2 = -1
+    const PLAYER_1_WINS = 2
 
     if (this.player1Score <= WINNING_SCORE && this.player2Score <= WINNING_SCORE) {
       return null;
     }
     const minusResult = this.player1Score - this.player2Score;
-    if (minusResult === 1) { return `Advantage ${this.player1Name}`; }
-    if (minusResult === -1) { return `Advantage ${this.player2Name}`; }
-    if (minusResult >= 2) { return `Win for ${this.player1Name}`; }
+    if (minusResult === ADVANTAGE_PLAYER_1) { return `Advantage ${this.player1Name}`; }
+    if (minusResult === ADVANTAGE_PLAYER_2) { return `Advantage ${this.player2Name}`; }
+    if (minusResult >= PLAYER_1_WINS) { return `Win for ${this.player1Name}`; }
     return `Win for ${this.player2Name}`;
   }
 
