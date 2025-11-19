@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watchAll",
     "build": "tsc",
     "test:coverage": "jest --coverage",
     "sonar": "npm run lint:report; sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=${SONAR_TOKEN} -Dsonar.projectKey=cata-tenis-ts",
