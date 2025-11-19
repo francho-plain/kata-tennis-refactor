@@ -22,21 +22,15 @@ export class TennisGame1 implements TennisGame {
   }
 
   getScore(): string {
-    let score: string = '';
-    const tempScore: number = 0;
-    if (this.m_score1 === this.m_score2) {
-      score = this.getEvenScore(this.m_score1);
-    }
-    else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
-      score = this.getAdvantageOrWinScore(this.m_score1, this.m_score2);
-    }
-    else {
-      score = this.getNormalScore(this.m_score1, this.m_score2);
-    }
-    return score;
+    return this.getEvenScore(this.m_score1) 
+      || this.getAdvantageOrWinScore(this.m_score1, this.m_score2) 
+      || this.getNormalScore(this.m_score1, this.m_score2);
   }
 
-  private getEvenScore(score: number): string {
+  private getEvenScore(score: number): string | false {
+    if (this.m_score1 !== this.m_score2) {
+      return false
+    }
     switch (score) {
       case 0:
         return 'Love-All';
@@ -68,7 +62,12 @@ export class TennisGame1 implements TennisGame {
     }
   }
 
-  private getAdvantageOrWinScore(score1: number, score2: number): string {
+  private getAdvantageOrWinScore(score1: number, score2: number): string | false {
+    const WINNING_SCORE: number = 4;
+
+    if (this.m_score1 < WINNING_SCORE && this.m_score2 < WINNING_SCORE) {
+      return false
+    }
     const minusResult = score1 - score2;
     if (minusResult === 1) {return 'Advantage player1';}
     if (minusResult === -1) {return 'Advantage player2';}
