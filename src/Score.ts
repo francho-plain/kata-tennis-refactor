@@ -1,17 +1,17 @@
 
 const EVEN_SCORES = ['Love', 'Fifteen', 'Thirty', 'Forty'];
 const WINNING_SCORE: number = 3;
-const getScoreName = (score: number):string => EVEN_SCORES[score] || '';
-
+const getScoreName = (score: number): string => EVEN_SCORES[score] || '';
+const ADVANTAGE_THRESHOLD = 1;
 
 export class Score {
-  private player1Score: number ;
-  private player2Score: number ;
+  private player1Score: number;
+  private player2Score: number;
 
   private readonly player1Name: string;
   private readonly player2Name: string;
 
-  constructor( player1Name: string,  player2Name: string) {
+  constructor(player1Name: string, player2Name: string) {
     this.player1Name = player1Name;
     this.player2Name = player2Name;
     this.player1Score = 0;
@@ -39,18 +39,19 @@ export class Score {
   }
 
   private getAdvantageOrWinScore(): string | null {
-    const ADVANTAGE_PLAYER_1 = 1
-    const ADVANTAGE_PLAYER_2 = -1
-    const PLAYER_1_WINS = 2
-
-    if (this.player1Score <= WINNING_SCORE && this.player2Score <= WINNING_SCORE) {
+    if ( this.player1Score <= WINNING_SCORE && this.player2Score <= WINNING_SCORE) {
       return null;
     }
-    const minusResult = this.player1Score - this.player2Score;
-    if (minusResult === ADVANTAGE_PLAYER_1) { return `Advantage ${this.player1Name}`; }
-    if (minusResult === ADVANTAGE_PLAYER_2) { return `Advantage ${this.player2Name}`; }
-    if (minusResult >= PLAYER_1_WINS) { return `Win for ${this.player1Name}`; }
-    return `Win for ${this.player2Name}`;
+
+    const scoreDifference = this.player1Score - this.player2Score;
+    const leadingPlayer = scoreDifference > 0 ? this.player1Name : this.player2Name;
+    
+    const absoluteDifference = Math.abs(scoreDifference);
+    if (absoluteDifference === ADVANTAGE_THRESHOLD) {
+      return `Advantage ${leadingPlayer}`;
+    }
+
+    return `Win for ${leadingPlayer}`;
   }
 
   toString(): string {
