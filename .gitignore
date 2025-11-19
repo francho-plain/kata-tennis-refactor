@@ -10,6 +10,10 @@ tests_build
 coverage
 
 .DS_Store
+
+# Environment variables
+.env
+
 # SonarQube/SonarLint
 .sonarlint/
 .sonar/
