@@ -12,15 +12,18 @@ export class TennisGame1 implements TennisGame {
   }
 
   wonPoint(playerName: string): void {
-    if (playerName === 'player1')
+    if (playerName === this.player1Name) {
       this.m_score1 += 1;
-    else
+    } 
+    
+    if(playerName === this.player2Name) {
       this.m_score2 += 1;
+    }
   }
 
   getScore(): string {
     let score: string = '';
-    let tempScore: number = 0;
+    const tempScore: number = 0;
     if (this.m_score1 === this.m_score2) {
       score = this.getEvenScore(this.m_score1);
     }
@@ -67,9 +70,9 @@ export class TennisGame1 implements TennisGame {
 
   private getAdvantageOrWinScore(score1: number, score2: number): string {
     const minusResult = score1 - score2;
-    if (minusResult === 1) return 'Advantage player1';
-    if (minusResult === -1) return 'Advantage player2';
-    if (minusResult >= 2) return 'Win for player1';
+    if (minusResult === 1) {return 'Advantage player1';}
+    if (minusResult === -1) {return 'Advantage player2';}
+    if (minusResult >= 2) {return 'Win for player1';}
     return 'Win for player2';
   }
 }

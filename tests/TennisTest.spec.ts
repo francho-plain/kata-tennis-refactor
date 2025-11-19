@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 import {TennisGame, TennisGame1, TennisGame2, TennisGame3, TennisGame4, TennisGame5, TennisGame6} from '../src';
 
 function getAllScores(): Array<[number, number, string]> {
@@ -27,51 +28,62 @@ function checkScore(game: TennisGame, player1Score: number, player2Score: number
 describe('TennisGame', () => {
 
   describe('TennisGame1', () => {
-    scores.forEach(([player1Score, player2Score, expectedScore]) => {
+    for (const [player1Score, player2Score, expectedScore] of scores) {
       it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, () => {
         checkScore(new TennisGame1('player1', 'player2'), player1Score, player2Score, expectedScore);
       });
-    });
+    }
+
+    it('check gamers name', () => {
+      const game = new TennisGame1('player1', 'player2');
+      
+      game.wonPoint('player1');
+      game.wonPoint('player2');
+      game.wonPoint('player unknown');
+
+      expect(game.getScore()).toEqual('Fifteen-All');
+      
+    })
   });
 
   describe('TennisGame2', () => {
-    scores.forEach(([player1Score, player2Score, expectedScore]) => {
+    for (const [player1Score, player2Score, expectedScore] of scores) {
       it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, () => {
         checkScore(new TennisGame2('player1', 'player2'), player1Score, player2Score, expectedScore);
       });
-    });
+    }
   });
 
   describe('TennisGame3', () => {
-    scores.forEach(([player1Score, player2Score, expectedScore]) => {
+    for (const [player1Score, player2Score, expectedScore] of scores) {
       it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, () => {
         checkScore(new TennisGame3('player1', 'player2'), player1Score, player2Score, expectedScore);
       });
-    });
+    }
   });
 
   describe('TennisGame4', () => {
-    scores.forEach(([player1Score, player2Score, expectedScore]) => {
-      it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, function () {
+    for (const [player1Score, player2Score, expectedScore] of scores) {
+      it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, () => {
         checkScore(new TennisGame4('player1', 'player2'), player1Score, player2Score, expectedScore);
       });
-    });
+    }
   });
 
   describe('TennisGame5', () => {
-    scores.forEach(([player1Score, player2Score, expectedScore]) => {
-      it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, function () {
+    for (const [player1Score, player2Score, expectedScore] of scores) {
+      it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, () => {
         checkScore(new TennisGame5('player1', 'player2'), player1Score, player2Score, expectedScore);
       });
-    });
+    }
   });
 
   describe('TennisGame6', () => {
-    scores.forEach(([player1Score, player2Score, expectedScore]) => {
-      it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, function () {
+    for (const [player1Score, player2Score, expectedScore] of scores) {
+      it(`scores ${player1Score}:${player2Score} as ${expectedScore}`, () => {
         checkScore(new TennisGame6('player1', 'player2'), player1Score, player2Score, expectedScore);
       });
-    });
+    }
   });
 
 });
