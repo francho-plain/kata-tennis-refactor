@@ -2,6 +2,8 @@ import { TennisGame } from './TennisGame';
 
 const EVEN_SCORES = ['Love', 'Fifteen', 'Thirty', 'Forty'];
 const WINNING_SCORE: number = 3;
+const getScoreName = (score: number):string => EVEN_SCORES[score] || '';
+
 
 
 export class TennisGame1 implements TennisGame {
@@ -24,33 +26,29 @@ export class TennisGame1 implements TennisGame {
   }
 
   getScore(): string {
-    return this.getEvenScore(this.player1Score)
-      || this.getAdvantageOrWinScore(this.player1Score, this.player2Score)
-      || this.getNormalScore(this.player1Score, this.player2Score);
+    return this.getEvenScore()
+      || this.getAdvantageOrWinScore()
+      || this.getNormalScore();
   }
 
-  private getEvenScore(score: number): string | null {
+  private getEvenScore(): string | null {
     if (this.player1Score !== this.player2Score) {
       return null;
     }
 
-    return score < WINNING_SCORE ? `${EVEN_SCORES[score]}-All` : 'Deuce';
+    return this.player1Score < WINNING_SCORE ? `${EVEN_SCORES[this.player1Score]}-All` : 'Deuce';
   }
 
-  private getNormalScore(score1: number, score2: number): string {
-    return `${this.getScoreName(score1)}-${this.getScoreName(score2)}`;
+  private getNormalScore(): string {
+    return `${getScoreName(this.player1Score)}-${getScoreName(this.player2Score)}`;
   }
 
-  private getScoreName(score: number): string {
-    return EVEN_SCORES[score] || '';
-  }
-
-  private getAdvantageOrWinScore(score1: number, score2: number): string | null {
+  private getAdvantageOrWinScore(): string | null {
 
     if (this.player1Score <= WINNING_SCORE && this.player2Score <= WINNING_SCORE) {
       return null;
     }
-    const minusResult = score1 - score2;
+    const minusResult = this.player1Score - this.player2Score;
     if (minusResult === 1) { return `Advantage ${this.player1Name}`; }
     if (minusResult === -1) { return `Advantage ${this.player2Name}`; }
     if (minusResult >= 2) { return `Win for ${this.player1Name}`; }
