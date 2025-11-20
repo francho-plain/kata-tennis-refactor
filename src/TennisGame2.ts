@@ -20,42 +20,43 @@ export class TennisGame2 implements TennisGame {
     this.playerOneResult = this.scoreToString(this.playerOneScore);
     this.playerTwoResult = this.scoreToString(this.playerTwoScore);
 
-    return  this.winScore() 
+    return this.winScore()
       || this.drawScore()
       || this.loveScore()
       || this.advantageScore()
       || this.playerOneResult + '-' + this.playerTwoResult
-    
+
   }
 
   private drawScore(): string | null {
-    if (this.playerOneScore === this.playerTwoScore) {
-      if (this.playerOneScore >= 3) {
-        return 'Deuce';
-      } else {
-        return this.playerOneResult + '-All';
-      }
+    if (this.playerOneScore !== this.playerTwoScore) {
+      return null;
     }
-    return null;
+
+    if (this.playerOneScore >= 3) {
+      return 'Deuce';
+    } else {
+      return this.playerOneResult + '-All';
+    }
   }
 
   private winScore(): string | null {
-    if (this.playerOneScore >= 4 && this.playerTwoScore >= 0 && (this.playerOneScore - this.playerTwoScore) >= 2) {
-      return 'Win for player1';
+    if (this.playerOneScore >= 4  && (this.playerOneScore - this.playerTwoScore) >= 2) {
+      return `Win for ${this.playerOneName}`;
     }
-    if (this.playerTwoScore >= 4 && this.playerOneScore >= 0 && (this.playerTwoScore - this.playerOneScore) >= 2) {
-      return 'Win for player2';
+    if (this.playerTwoScore >= 4  && (this.playerTwoScore - this.playerOneScore) >= 2) {
+      return `Win for ${this.playerTwoName}`;
     }
     return null;
   }
 
   private advantageScore(): string | null {
     if (this.playerOneScore > this.playerTwoScore && this.playerTwoScore >= 3) {
-      return 'Advantage player1';
+      return `Advantage ${this.playerOneName}`;
     }
 
     if (this.playerTwoScore > this.playerOneScore && this.playerOneScore >= 3) {
-      return 'Advantage player2';
+      return `Advantage ${this.playerTwoName}`;
     }
     return null;
   }
