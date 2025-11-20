@@ -16,7 +16,7 @@ export class TennisGame2 implements TennisGame {
   }
 
   getScore(): string {
-     const scores = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+    const scores = ['Love', 'Fifteen', 'Thirty', 'Forty'];
     this.playerOneResult = scores[this.playerOneScore];
     this.playerTwoResult = scores[this.playerTwoScore];
 
@@ -25,6 +25,21 @@ export class TennisGame2 implements TennisGame {
       || this.loveScore()
       || this.advantageScore()
       || this.playerOneResult + '-' + this.playerTwoResult
+  }
+
+  wonPoint(player: string): void {
+    if (player === this.playerOneName) { this.playerOneScore++; }
+    if (player === this.playerTwoName) { this.playerTwoScore++; }
+  }
+
+  private winScore(): string | null {
+    if (this.playerOneScore >= 4 && (this.playerOneScore - this.playerTwoScore) >= 2) {
+      return `Win for ${this.playerOneName}`;
+    }
+    if (this.playerTwoScore >= 4 && (this.playerTwoScore - this.playerOneScore) >= 2) {
+      return `Win for ${this.playerTwoName}`;
+    }
+    return null;
   }
 
   private drawScore(): string | null {
@@ -39,12 +54,14 @@ export class TennisGame2 implements TennisGame {
     }
   }
 
-  private winScore(): string | null {
-    if (this.playerOneScore >= 4  && (this.playerOneScore - this.playerTwoScore) >= 2) {
-      return `Win for ${this.playerOneName}`;
+  private loveScore(): string | null {
+    if (this.playerOneScore > 0 && this.playerTwoScore === 0) {
+      this.playerTwoResult = 'Love';
+      return this.playerOneResult + '-' + this.playerTwoResult;
     }
-    if (this.playerTwoScore >= 4  && (this.playerTwoScore - this.playerOneScore) >= 2) {
-      return `Win for ${this.playerTwoName}`;
+    if (this.playerTwoScore > 0 && this.playerOneScore === 0) {
+      this.playerOneResult = 'Love';
+      return this.playerOneResult + '-' + this.playerTwoResult;
     }
     return null;
   }
@@ -59,20 +76,4 @@ export class TennisGame2 implements TennisGame {
     return null;
   }
 
-  private loveScore(): string | null {
-    if (this.playerOneScore > 0 && this.playerTwoScore === 0) {
-      this.playerTwoResult = 'Love';
-      return this.playerOneResult + '-' + this.playerTwoResult;
-    }
-    if (this.playerTwoScore > 0 && this.playerOneScore === 0) {
-      this.playerOneResult = 'Love';
-      return this.playerOneResult + '-' + this.playerTwoResult;
-    }
-    return null;
-  }
-
-  wonPoint(player: string): void {
-    if (player === this.playerOneName) { this.playerOneScore++; }
-    if (player === this.playerTwoName) { this.playerTwoScore++; }
-  }
 }
