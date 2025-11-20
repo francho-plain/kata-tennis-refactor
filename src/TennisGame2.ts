@@ -25,7 +25,6 @@ export class TennisGame2 implements TennisGame {
       || this.loveScore()
       || this.advantageScore()
       || this.playerOneResult + '-' + this.playerTwoResult
-
   }
 
   private drawScore(): string | null {
@@ -54,7 +53,6 @@ export class TennisGame2 implements TennisGame {
     if (this.playerOneScore > this.playerTwoScore && this.playerTwoScore >= 3) {
       return `Advantage ${this.playerOneName}`;
     }
-
     if (this.playerTwoScore > this.playerOneScore && this.playerOneScore >= 3) {
       return `Advantage ${this.playerTwoName}`;
     }
@@ -63,12 +61,10 @@ export class TennisGame2 implements TennisGame {
 
   private loveScore(): string | null {
     if (this.playerOneScore > 0 && this.playerTwoScore === 0) {
-
       this.playerTwoResult = 'Love';
       return this.playerOneResult + '-' + this.playerTwoResult;
     }
     if (this.playerTwoScore > 0 && this.playerOneScore === 0) {
-
       this.playerOneResult = 'Love';
       return this.playerOneResult + '-' + this.playerTwoResult;
     }
@@ -88,28 +84,8 @@ export class TennisGame2 implements TennisGame {
     return 'Forty';
   }
 
-  SetP1Score(score: number): void {
-    for (let i = 0; i < score; i++) {
-      this.P1Score();
-    }
-  }
-
-  SetP2Score(score: number): void {
-    for (let i = 0; i < score; i++) {
-      this.P2Score();
-    }
-  }
-
-  P1Score(): void {
-    this.playerOneScore++;
-  }
-
-  P2Score(): void {
-    this.playerTwoScore++;
-  }
-
   wonPoint(player: string): void {
-    if (player === 'player1') { this.P1Score(); }
-    else { this.P2Score(); }
+    if (player === this.playerOneName) { this.playerOneScore++; }
+    if (player === this.playerTwoName) { this.playerTwoScore++; }
   }
 }
