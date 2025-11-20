@@ -16,9 +16,9 @@ export class TennisGame2 implements TennisGame {
   }
 
   getScore(): string {
-
-    this.playerOneResult = this.scoreToString(this.playerOneScore);
-    this.playerTwoResult = this.scoreToString(this.playerTwoScore);
+     const scores = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+    this.playerOneResult = scores[this.playerOneScore];
+    this.playerTwoResult = scores[this.playerTwoScore];
 
     return this.winScore()
       || this.drawScore()
@@ -69,19 +69,6 @@ export class TennisGame2 implements TennisGame {
       return this.playerOneResult + '-' + this.playerTwoResult;
     }
     return null;
-  }
-
-  private scoreToString(score: number): string {
-    if (score === 0) {
-      return 'Love';
-    }
-    if (score === 1) {
-      return 'Fifteen';
-    }
-    if (score === 2) {
-      return 'Thirty';
-    }
-    return 'Forty';
   }
 
   wonPoint(player: string): void {
