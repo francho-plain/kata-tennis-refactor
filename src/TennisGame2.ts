@@ -16,54 +16,62 @@ export class TennisGame2 implements TennisGame {
   }
 
   getScore(): string {
-    let score: string = '';
-    if (this.playerOneScore === this.playerTwoScore && this.playerOneScore < 4) {
-      score = this.scoreToString(this.playerOneScore);
-      score += '-All';
-    }
-    if (this.playerOneScore === this.playerTwoScore && this.playerOneScore >= 3) {
-      score = 'Deuce';
-    }
 
-    if (this.playerOneScore > 0 && this.playerTwoScore === 0) {
-      this.playerOneResult = this.scoreToString(this.playerOneScore);
+    this.playerOneResult = this.scoreToString(this.playerOneScore);
+    this.playerTwoResult = this.scoreToString(this.playerTwoScore);
 
-      this.playerTwoResult = 'Love';
-      score = this.playerOneResult + '-' + this.playerTwoResult;
-    }
-    if (this.playerTwoScore > 0 && this.playerOneScore === 0) {
-      this.playerTwoResult = this.scoreToString(this.playerTwoScore);
+    return  this.winScore() 
+      || this.drawScore()
+      || this.loveScore()
+      || this.advantageScore()
+      || this.playerOneResult + '-' + this.playerTwoResult
+    
+  }
 
-      this.playerOneResult = 'Love';
-      score = this.playerOneResult + '-' + this.playerTwoResult;
+  private drawScore(): string | null {
+    if (this.playerOneScore === this.playerTwoScore) {
+      if (this.playerOneScore >= 3) {
+        return 'Deuce';
+      } else {
+        return this.playerOneResult + '-All';
+      }
     }
+    return null;
+  }
 
-    if (this.playerOneScore > this.playerTwoScore && this.playerOneScore < 4) {
-      this.playerOneResult = this.scoreToString(this.playerOneScore);
-      this.playerTwoResult = this.scoreToString(this.playerTwoScore);
-      score = this.playerOneResult + '-' + this.playerTwoResult;
+  private winScore(): string | null {
+    if (this.playerOneScore >= 4 && this.playerTwoScore >= 0 && (this.playerOneScore - this.playerTwoScore) >= 2) {
+      return 'Win for player1';
     }
-    if (this.playerTwoScore > this.playerOneScore && this.playerTwoScore < 4) {
-      this.playerOneResult = this.scoreToString(this.playerOneScore);
-      this.playerTwoResult = this.scoreToString(this.playerTwoScore);
-      score = this.playerOneResult + '-' + this.playerTwoResult;
+    if (this.playerTwoScore >= 4 && this.playerOneScore >= 0 && (this.playerTwoScore - this.playerOneScore) >= 2) {
+      return 'Win for player2';
     }
+    return null;
+  }
 
+  private advantageScore(): string | null {
     if (this.playerOneScore > this.playerTwoScore && this.playerTwoScore >= 3) {
-      score = 'Advantage player1';
+      return 'Advantage player1';
     }
 
     if (this.playerTwoScore > this.playerOneScore && this.playerOneScore >= 3) {
-      score = 'Advantage player2';
+      return 'Advantage player2';
     }
+    return null;
+  }
 
-    if (this.playerOneScore >= 4 && this.playerTwoScore >= 0 && (this.playerOneScore - this.playerTwoScore) >= 2) {
-      score = 'Win for player1';
+  private loveScore(): string | null {
+    if (this.playerOneScore > 0 && this.playerTwoScore === 0) {
+
+      this.playerTwoResult = 'Love';
+      return this.playerOneResult + '-' + this.playerTwoResult;
     }
-    if (this.playerTwoScore >= 4 && this.playerOneScore >= 0 && (this.playerTwoScore - this.playerOneScore) >= 2) {
-      score = 'Win for player2';
+    if (this.playerTwoScore > 0 && this.playerOneScore === 0) {
+
+      this.playerOneResult = 'Love';
+      return this.playerOneResult + '-' + this.playerTwoResult;
     }
-    return score;
+    return null;
   }
 
   private scoreToString(score: number): string {
