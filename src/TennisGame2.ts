@@ -18,15 +18,7 @@ export class TennisGame2 implements TennisGame {
   getScore(): string {
     let score: string = '';
     if (this.playerOneScore === this.playerTwoScore && this.playerOneScore < 4) {
-      if (this.playerOneScore === 0) {
-        score = 'Love';
-      }
-      if (this.playerOneScore === 1) {
-        score = 'Fifteen';
-      }
-      if (this.playerOneScore === 2) {
-        score = 'Thirty';
-      }
+      score = this.scoreToString(this.playerOneScore);
       score += '-All';
     }
     if (this.playerOneScore === this.playerTwoScore && this.playerOneScore >= 3) {
@@ -34,62 +26,26 @@ export class TennisGame2 implements TennisGame {
     }
 
     if (this.playerOneScore > 0 && this.playerTwoScore === 0) {
-      if (this.playerOneScore === 1) {
-        this.playerOneResult = 'Fifteen';
-      }
-      if (this.playerOneScore === 2) {
-        this.playerOneResult = 'Thirty';
-      }
-      if (this.playerOneScore === 3) {
-        this.playerOneResult = 'Forty';
-      }
+      this.playerOneResult = this.scoreToString(this.playerOneScore);
 
       this.playerTwoResult = 'Love';
       score = this.playerOneResult + '-' + this.playerTwoResult;
     }
     if (this.playerTwoScore > 0 && this.playerOneScore === 0) {
-      if (this.playerTwoScore === 1) {
-        this.playerTwoResult = 'Fifteen';
-      }
-      if (this.playerTwoScore === 2) {
-        this.playerTwoResult = 'Thirty';
-      }
-      if (this.playerTwoScore === 3) {
-        this.playerTwoResult = 'Forty';
-      }
+      this.playerTwoResult = this.scoreToString(this.playerTwoScore);
 
       this.playerOneResult = 'Love';
       score = this.playerOneResult + '-' + this.playerTwoResult;
     }
 
     if (this.playerOneScore > this.playerTwoScore && this.playerOneScore < 4) {
-      if (this.playerOneScore === 2) {
-        this.playerOneResult = 'Thirty';
-      }
-      if (this.playerOneScore === 3) {
-        this.playerOneResult = 'Forty';
-      }
-      if (this.playerTwoScore === 1) {
-        this.playerTwoResult = 'Fifteen';
-      }
-      if (this.playerTwoScore === 2) {
-        this.playerTwoResult = 'Thirty';
-      }
+      this.playerOneResult = this.scoreToString(this.playerOneScore);
+      this.playerTwoResult = this.scoreToString(this.playerTwoScore);
       score = this.playerOneResult + '-' + this.playerTwoResult;
     }
     if (this.playerTwoScore > this.playerOneScore && this.playerTwoScore < 4) {
-      if (this.playerTwoScore === 2) {
-        this.playerTwoResult = 'Thirty';
-      }
-      if (this.playerTwoScore === 3) {
-        this.playerTwoResult = 'Forty';
-      }
-      if (this.playerOneScore === 1) {
-        this.playerOneResult = 'Fifteen';
-      }
-      if (this.playerOneScore === 2) {
-        this.playerOneResult = 'Thirty';
-      }
+      this.playerOneResult = this.scoreToString(this.playerOneScore);
+      this.playerTwoResult = this.scoreToString(this.playerTwoScore);
       score = this.playerOneResult + '-' + this.playerTwoResult;
     }
 
@@ -108,6 +64,19 @@ export class TennisGame2 implements TennisGame {
       score = 'Win for player2';
     }
     return score;
+  }
+
+  private scoreToString(score: number): string {
+    if (score === 0) {
+      return 'Love';
+    }
+    if (score === 1) {
+      return 'Fifteen';
+    }
+    if (score === 2) {
+      return 'Thirty';
+    }
+    return 'Forty';
   }
 
   SetP1Score(score: number): void {
