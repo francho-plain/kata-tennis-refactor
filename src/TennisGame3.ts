@@ -16,16 +16,16 @@ export class TennisGame3 implements TennisGame {
   }
 
   getScore(): string {
-    let currentScore: string;
-    if (this.player1Score < WINNING_SCORE && this.player2Score < WINNING_SCORE && this.player1Score + this.player2Score !== 6) {
-      currentScore = SCORE_NAMES[this.player1Score];
-      return (this.player1Score === this.player2Score) ? currentScore + '-All' : currentScore + '-' + SCORE_NAMES[this.player2Score];
-    } else {
-      if (this.player1Score === this.player2Score) { return 'Deuce'; }
-
-      const leadingPlayer = this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
-      return (((this.player1Score - this.player2Score) * (this.player1Score - this.player2Score)) === 1) ? 'Advantage ' + leadingPlayer : 'Win for ' + leadingPlayer;
+    
+    if (this.player1Score === this.player2Score) { return (this.player1Score >= WINNING_SCORE-1) ? 'Deuce' : `${SCORE_NAMES[this.player1Score]}-All`; }
+    
+    if (this.player1Score < WINNING_SCORE && this.player2Score < WINNING_SCORE) {
+      return  SCORE_NAMES[this.player1Score] + '-' + SCORE_NAMES[this.player2Score];
     }
+    
+    const leadingPlayer = this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
+    return (((this.player1Score - this.player2Score) * (this.player1Score - this.player2Score)) === 1) ? 'Advantage ' + leadingPlayer : 'Win for ' + leadingPlayer;
+
   }
 
   wonPoint(playerName: string): void {
