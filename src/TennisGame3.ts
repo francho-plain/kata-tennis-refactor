@@ -6,22 +6,22 @@ export class TennisGame3 implements TennisGame {
   private readonly player1Name: string;
   private readonly player2Name: string;
 
-  constructor(p1N: string, p2N: string) {
-    this.player1Name = p1N;
-    this.player2Name = p2N;
+  constructor(player1Name: string, player2Name: string) {
+    this.player1Name = player1Name;
+    this.player2Name = player2Name;
   }
 
   getScore(): string {
-    let score: string;
+    let currentScore: string;
     if (this.player1Score < 4 && this.player2Score < 4 && !(this.player1Score + this.player2Score === 6)) {
-      const p: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
-      score = p[this.player1Score];
-      return (this.player1Score === this.player2Score) ? score + '-All' : score + '-' + p[this.player2Score];
+      const scoreNames: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+      currentScore = scoreNames[this.player1Score];
+      return (this.player1Score === this.player2Score) ? currentScore + '-All' : currentScore + '-' + scoreNames[this.player2Score];
     } else {
       if (this.player1Score === this.player2Score)
         {return 'Deuce';}
-      score = this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
-      return (((this.player1Score - this.player2Score) * (this.player1Score - this.player2Score)) === 1) ? 'Advantage ' + score : 'Win for ' + score;
+      const leadingPlayer = this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
+      return (((this.player1Score - this.player2Score) * (this.player1Score - this.player2Score)) === 1) ? 'Advantage ' + leadingPlayer : 'Win for ' + leadingPlayer;
     }
   }
 
