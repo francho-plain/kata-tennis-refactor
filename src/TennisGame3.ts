@@ -3,6 +3,7 @@ import { TennisGame } from './TennisGame';
 const WINNING_SCORE = 4;
 const DEUCE_SCORE = 3;
 const SCORE_NAMES: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+const ADVANTAGE_POINT = 1;
 
 
 export class TennisGame3 implements TennisGame {
@@ -16,8 +17,7 @@ export class TennisGame3 implements TennisGame {
     this.player2Name = player2Name;
   }
 
-  getScore(): string {
-    
+  getScore(): string { 
     if (this.player1Score === this.player2Score) { 
       return (this.player1Score >= DEUCE_SCORE) ? 'Deuce' : `${SCORE_NAMES[this.player1Score]}-All`; 
     }
@@ -27,8 +27,11 @@ export class TennisGame3 implements TennisGame {
     }
 
     const leadingPlayer = this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
-    return (((this.player1Score - this.player2Score) * (this.player1Score - this.player2Score)) === 1) ? 'Advantage ' + leadingPlayer : 'Win for ' + leadingPlayer;
+    return this.isAdvantage() ? 'Advantage ' + leadingPlayer : 'Win for ' + leadingPlayer;
+  }
 
+  private isAdvantage(): boolean {
+    return Math.abs(this.player1Score - this.player2Score) === ADVANTAGE_POINT;
   }
 
   wonPoint(playerName: string): void {
