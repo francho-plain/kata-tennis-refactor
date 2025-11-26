@@ -5,12 +5,28 @@ const DEUCE_SCORE = 3;
 const SCORE_NAMES: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
 const ADVANTAGE_POINT = 1;
 
+// Predicados
+const isAdvantage = (score1: number, score2: number): boolean =>
+  Math.abs(score1 - score2) === ADVANTAGE_POINT;
 
-const isAdvantage = (player1Score: number, player2Score: number): boolean => Math.abs(player1Score - player2Score) === ADVANTAGE_POINT;
-const isDraw = (player1Score: number, player2Score: number): boolean => player1Score === player2Score; 
-const hasWinnerScore = (player1Score: number, player2Score: number): boolean => Math.max(player1Score, player2Score) >= WINNING_SCORE ;
-const leadingPlayer = (player1Score: number, player2Score: number, player1Name: string, player2Name: string): string =>
-  player1Score > player2Score ? player1Name : player2Name;
+const isDraw = (score1: number, score2: number): boolean =>
+  score1 === score2;
+const isRegularScore = (score1: number, score2: number): boolean =>
+  Math.max(score1, score2) < WINNING_SCORE;
+
+// Selectores
+const getLeadingPlayer = (score1: number, score2: number, name1: string, name2: string): string => score1 > score2 ? name1 : name2;
+
+// Funciones de formato
+const formatDraw = (score: number): string => score >= DEUCE_SCORE ? 'Deuce' : `${SCORE_NAMES[score]}-All`;
+
+const formatRegular = (score1: number, score2: number): string => `${SCORE_NAMES[score1]}-${SCORE_NAMES[score2]}`;
+
+const formatEndGame = (score1: number, score2: number, name1: string, name2: string): string => {
+  const leader = getLeadingPlayer(score1, score2, name1, name2);
+  const prefix = isAdvantage(score1, score2 ) ? 'Advantage' : 'Win for';
+  return `${prefix} ${leader}`;
+};
 
 
 export class TennisGame3 implements TennisGame {
@@ -25,16 +41,11 @@ export class TennisGame3 implements TennisGame {
   }
 
   getScore(): string {
-    if (isDraw(this.player1Score, this.player2Score)) {
-      return (this.player1Score >= DEUCE_SCORE) ? 'Deuce' : `${SCORE_NAMES[this.player1Score]}-All`;
-    }
-    
-    if (!hasWinnerScore(this.player1Score, this.player2Score)) {
-      return  SCORE_NAMES[this.player1Score] + '-' + SCORE_NAMES[this.player2Score];
-    }
-
-    const leading = leadingPlayer(this.player1Score, this.player2Score, this.player1Name, this.player2Name);
-    return isAdvantage(this.player1Score, this.player2Score) ? 'Advantage ' + leading : 'Win for ' + leading;
+    return isDraw(this.player1Score, this.player2Score)
+      ? formatDraw(this.player1Score)
+      : isRegularScore(this.player1Score, this.player2Score)
+        ? formatRegular(this.player1Score, this.player2Score)
+        : formatEndGame(this.player1Score, this.player2Score, this.player1Name, this.player2Name);
   }
 
   wonPoint(playerName: string): void {
