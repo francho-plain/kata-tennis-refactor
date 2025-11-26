@@ -6,6 +6,13 @@ const SCORE_NAMES: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
 const ADVANTAGE_POINT = 1;
 
 
+const isAdvantage = (player1Score: number, player2Score: number): boolean => Math.abs(player1Score - player2Score) === ADVANTAGE_POINT;
+const isDraw = (player1Score: number, player2Score: number): boolean => player1Score === player2Score; 
+const hasWinnerScore = (player1Score: number, player2Score: number): boolean => Math.max(player1Score, player2Score) >= WINNING_SCORE ;
+const leadingPlayer = (player1Score: number, player2Score: number, player1Name: string, player2Name: string): string =>
+  player1Score > player2Score ? player1Name : player2Name;
+
+
 export class TennisGame3 implements TennisGame {
   private player2Score: number = 0;
   private player1Score: number = 0;
@@ -17,21 +24,17 @@ export class TennisGame3 implements TennisGame {
     this.player2Name = player2Name;
   }
 
-  getScore(): string { 
-    if (this.player1Score === this.player2Score) { 
-      return (this.player1Score >= DEUCE_SCORE) ? 'Deuce' : `${SCORE_NAMES[this.player1Score]}-All`; 
+  getScore(): string {
+    if (isDraw(this.player1Score, this.player2Score)) {
+      return (this.player1Score >= DEUCE_SCORE) ? 'Deuce' : `${SCORE_NAMES[this.player1Score]}-All`;
     }
     
-    if (this.player1Score < WINNING_SCORE && this.player2Score < WINNING_SCORE) {
+    if (!hasWinnerScore(this.player1Score, this.player2Score)) {
       return  SCORE_NAMES[this.player1Score] + '-' + SCORE_NAMES[this.player2Score];
     }
 
-    const leadingPlayer = this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
-    return this.isAdvantage() ? 'Advantage ' + leadingPlayer : 'Win for ' + leadingPlayer;
-  }
-
-  private isAdvantage(): boolean {
-    return Math.abs(this.player1Score - this.player2Score) === ADVANTAGE_POINT;
+    const leading = leadingPlayer(this.player1Score, this.player2Score, this.player1Name, this.player2Name);
+    return isAdvantage(this.player1Score, this.player2Score) ? 'Advantage ' + leading : 'Win for ' + leading;
   }
 
   wonPoint(playerName: string): void {
