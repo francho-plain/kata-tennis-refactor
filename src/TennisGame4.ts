@@ -19,17 +19,23 @@ export class TennisGame4 implements TennisGame {
   }
 
   getScore(): string {
-    return new Deuce(
-      this, new GameServer(
-        this, new GameReceiver(
-          this, new AdvantageServer(
-            this, new AdvantageReceiver(
-              this, new DefaultResult(this)
-            )
-          )
-        )
-      )
-    ).getResult().format()
+    const rules: ScoreRule[] = [
+      new Deuce(this),
+      new GameServer(this),
+      new GameReceiver(this),
+      new AdvantageServer(this),
+      new AdvantageReceiver(this),
+      new DefaultResult(this)
+    ];
+
+    for (const rule of rules) {
+      const result = rule.getResult();
+      if(result) {
+        return result.format();
+      }
+    }
+
+    return "ERROR: unknown result";
   }
 
   wonPoint(playerName: string): void {
@@ -62,21 +68,19 @@ class TennisResult {
 
 abstract class ScoreRule {
   protected readonly game: TennisGame4;
-  protected readonly nextRule: ScoreRule | null;
 
-  constructor(game: TennisGame4, nextRule: ScoreRule | null = null) {
+  constructor(game: TennisGame4) {
     this.game = game;
-    this.nextRule = nextRule;
   }
 
   abstract matches(): boolean;
   abstract formatResult(): TennisResult;
 
-  getResult(): TennisResult {
+  getResult(): TennisResult|null {
     if (this.matches()) {
       return this.formatResult();
     }
-    return this.nextRule?.getResult() ?? new TennisResult("", "");
+    return null;
   }
 }
 
