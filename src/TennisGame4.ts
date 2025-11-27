@@ -28,26 +28,6 @@ export class TennisGame4 implements TennisGame {
     return result.format();
   }
 
-  receiverHasAdvantage(): boolean {
-    return this.receiverScore >= MIN_SCORE_FOR_GAME_END && (this.receiverScore - this.serverScore) === 1;
-  }
-
-  serverHasAdvantage(): boolean {
-    return this.serverScore >= MIN_SCORE_FOR_GAME_END && (this.serverScore - this.receiverScore) === 1;
-  }
-
-  receiverHasWon(): boolean {
-    return this.receiverScore >= MIN_SCORE_FOR_GAME_END && (this.receiverScore - this.serverScore) >= MIN_LEAD_FOR_GAME_END;
-  }
-
-  serverHasWon(): boolean {
-    return this.serverScore >= MIN_SCORE_FOR_GAME_END && (this.serverScore - this.receiverScore) >= MIN_LEAD_FOR_GAME_END;
-  }
-
-  isDeuce(): boolean {
-    return this.serverScore >= DEUCE_THRESHOLD && this.receiverScore >= DEUCE_THRESHOLD && (this.serverScore === this.receiverScore);
-  }
-
   wonPoint(playerName: string): void {
     if (playerName === 'player1') {
       this.serverScore += 1;
@@ -76,15 +56,13 @@ class TennisResult {
   }
 }
 
-type NextResult = ScoreRule | GameServer | GameReceiver | AdvantageServer | AdvantageReceiver | DefaultResult;
-
 abstract class ScoreRule {
   protected readonly game: TennisGame4;
-  protected readonly nextResult: NextResult;
+  protected readonly nextRule: ScoreRule | null;
 
-  constructor(game: TennisGame4, nextResult: NextResult) {
+  constructor(game: TennisGame4, nextRule: ScoreRule | null = null) {
     this.game = game;
-    this.nextResult = nextResult;
+    this.nextRule = nextRule;
   }
 
   abstract matches(): boolean;
@@ -94,13 +72,17 @@ abstract class ScoreRule {
     if (this.matches()) {
       return this.formatResult();
     }
-    return this.nextResult.getResult();
+    return this.nextRule?.getResult() ?? new TennisResult("", "");
   }
 }
 
 class Deuce extends ScoreRule {
+  private isDeuce(): boolean {
+    return this.game.serverScore >= DEUCE_THRESHOLD && this.game.receiverScore >= DEUCE_THRESHOLD && (this.game.serverScore === this.game.receiverScore);
+  }
+
   matches(): boolean {
-    return this.game.isDeuce();
+    return this.isDeuce();
   }
 
   formatResult(): TennisResult {
@@ -109,8 +91,12 @@ class Deuce extends ScoreRule {
 }
 
 class GameServer extends ScoreRule {
+  serverHasWon(): boolean {
+    return this.game.serverScore >= MIN_SCORE_FOR_GAME_END && (this.game.serverScore - this.game.receiverScore) >= MIN_LEAD_FOR_GAME_END;
+  }
+
   matches(): boolean {
-    return this.game.serverHasWon();
+    return this.serverHasWon();
   }
 
   formatResult(): TennisResult {
@@ -119,8 +105,13 @@ class GameServer extends ScoreRule {
 }
 
 class GameReceiver extends ScoreRule {
+
+  private receiverHasWon(): boolean {
+    return this.game.receiverScore >= MIN_SCORE_FOR_GAME_END && (this.game.receiverScore - this.game.serverScore) >= MIN_LEAD_FOR_GAME_END;
+  }
+
   matches(): boolean {
-    return this.game.receiverHasWon();
+    return this.receiverHasWon();
   }
 
   formatResult(): TennisResult {
@@ -128,47 +119,39 @@ class GameReceiver extends ScoreRule {
   }
 }
 
-class AdvantageServer {
-  private readonly game: TennisGame4;
-  private readonly nextResult: AdvantageReceiver;
-  constructor(game: TennisGame4, nextResult: AdvantageReceiver) {
-    this.game = game;
-    this.nextResult = nextResult;
+class AdvantageServer extends ScoreRule {
+  private serverHasAdvantage(): boolean {
+    return this.game.serverScore >= MIN_SCORE_FOR_GAME_END && (this.game.serverScore - this.game.receiverScore) === 1;
   }
 
-  getResult(): TennisResult {
-    if (this.game.serverHasAdvantage()) {
-      return new TennisResult("Advantage " + this.game.server, "");
-    }
-    return this.nextResult.getResult();
+  matches(): boolean {
+    return this.serverHasAdvantage();
+  }
+
+  formatResult(): TennisResult {
+    return new TennisResult("Advantage " + this.game.server, "");
   }
 }
 
-class AdvantageReceiver {
-  private readonly game: TennisGame4;
-  private readonly nextResult: DefaultResult;
-  constructor(game: TennisGame4, nextResult: DefaultResult) {
-    this.game = game;
-    this.nextResult = nextResult;
+class AdvantageReceiver extends ScoreRule {
+  matches(): boolean {
+    const receiverHasAdvantage = this.game.receiverScore >= MIN_SCORE_FOR_GAME_END && (this.game.receiverScore - this.game.serverScore) === 1;
+    return receiverHasAdvantage;
   }
 
-  getResult(): TennisResult {
-    if (this.game.receiverHasAdvantage()) {
-      return new TennisResult("Advantage " + this.game.receiver, "");
-    }
-    return this.nextResult.getResult();
+  formatResult(): TennisResult {
+    return new TennisResult("Advantage " + this.game.receiver, "");
   }
 }
 
-class DefaultResult {
-  private readonly scores: string[];
-  private readonly game: TennisGame4;
-  constructor(game: TennisGame4) {
-    this.scores = ["Love", "Fifteen", "Thirty", "Forty"];
-    this.game = game;
+class DefaultResult extends ScoreRule {
+  private readonly scores: string[] = ["Love", "Fifteen", "Thirty", "Forty"];
+
+  matches(): boolean {
+    return true;
   }
 
-  getResult(): TennisResult {
+  formatResult(): TennisResult {
     return new TennisResult(this.scores[this.game.serverScore], this.scores[this.game.receiverScore]);
   }
 }
