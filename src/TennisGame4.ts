@@ -118,19 +118,13 @@ class GameServer extends ScoreRule {
   }
 }
 
-class GameReceiver {
-  private readonly game: TennisGame4;
-  private readonly nextResult: AdvantageServer;
-  constructor(game: TennisGame4, nextResult: AdvantageServer) {
-    this.game = game;
-    this.nextResult = nextResult;
+class GameReceiver extends ScoreRule {
+  matches(): boolean {
+    return this.game.receiverHasWon();
   }
 
-  getResult(): TennisResult {
-    if (this.game.receiverHasWon()) {
-      return new TennisResult("Win for " + this.game.receiver, "");
-    }
-    return this.nextResult.getResult();
+  formatResult(): TennisResult {
+    return new TennisResult("Win for " + this.game.receiver, "");
   }
 }
 
