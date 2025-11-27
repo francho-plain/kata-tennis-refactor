@@ -19,13 +19,17 @@ export class TennisGame4 implements TennisGame {
   }
 
   getScore(): string {
-    const result = new Deuce(
+    return new Deuce(
       this, new GameServer(
         this, new GameReceiver(
           this, new AdvantageServer(
             this, new AdvantageReceiver(
-              this, new DefaultResult(this)))))).getResult();
-    return result.format();
+              this, new DefaultResult(this)
+            )
+          )
+        )
+      )
+    ).getResult().format()
   }
 
   wonPoint(playerName: string): void {
