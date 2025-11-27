@@ -4,31 +4,68 @@ const MIN_SCORE_FOR_GAME_END = 4;
 const MIN_LEAD_FOR_GAME_END = 2;
 const DEUCE_THRESHOLD = 3;
 
-export class TennisGame4 implements TennisGame {
+interface TwoPlayersGame {
+  server: string;
+  receiver: string;
+  serverScore: number;
+  receiverScore: number;
+}
 
-  public server: string;
-  public receiver: string;
+interface ScoreFormatter {
+  format(): string;
+}
+
+abstract class ScoreRule {
+  protected readonly game: TwoPlayersGame;
+
+  constructor(game: TwoPlayersGame) {
+    this.game = game;
+  }
+
+  abstract matches(): boolean;
+  abstract formatResult(): ScoreFormatter;
+
+  getResult(): ScoreFormatter|null {
+    if (this.matches()) {
+      return this.formatResult();
+    }
+    return null;
+  }
+}
+
+abstract class GameRules extends Array<ScoreRule> {}
+
+class TennisRules extends GameRules {
+  public constructor(game: TwoPlayersGame) {
+    super();
+    this.push(new Deuce(game));
+    this.push(new GameServer(game));
+    this.push(new GameReceiver(game));
+    this.push(new AdvantageServer(game));
+    this.push(new AdvantageReceiver(game));
+    this.push(new DefaultResult(game));
+  }
+}
+
+export class TennisGame4 implements TennisGame, TwoPlayersGame {
+  public readonly server: string;
+  public readonly receiver: string;
   public serverScore: number;
   public receiverScore: number;
+
+  private readonly rules: GameRules
 
   constructor(player1: string, player2: string) {
     this.server = player1;
     this.receiver = player2;
     this.serverScore = 0;
     this.receiverScore = 0;
+
+    this.rules = new TennisRules(this);
   }
 
   getScore(): string {
-    const rules: ScoreRule[] = [
-      new Deuce(this),
-      new GameServer(this),
-      new GameReceiver(this),
-      new AdvantageServer(this),
-      new AdvantageReceiver(this),
-      new DefaultResult(this)
-    ];
-
-    for (const rule of rules) {
+    for (const rule of this.rules) {
       const result = rule.getResult();
       if(result) {
         return result.format();
@@ -47,7 +84,7 @@ export class TennisGame4 implements TennisGame {
   }
 }
 
-class TennisResult {
+class TennisResult implements ScoreFormatter {
   private readonly serverScore: string;
   private readonly receiverScore: string;
   constructor(serverScore: string, receiverScore: string) {
@@ -66,24 +103,6 @@ class TennisResult {
   }
 }
 
-abstract class ScoreRule {
-  protected readonly game: TennisGame4;
-
-  constructor(game: TennisGame4) {
-    this.game = game;
-  }
-
-  abstract matches(): boolean;
-  abstract formatResult(): TennisResult;
-
-  getResult(): TennisResult|null {
-    if (this.matches()) {
-      return this.formatResult();
-    }
-    return null;
-  }
-}
-
 class Deuce extends ScoreRule {
   private isDeuce(): boolean {
     return this.game.serverScore >= DEUCE_THRESHOLD && this.game.receiverScore >= DEUCE_THRESHOLD && (this.game.serverScore === this.game.receiverScore);
@@ -93,7 +112,7 @@ class Deuce extends ScoreRule {
     return this.isDeuce();
   }
 
-  formatResult(): TennisResult {
+  formatResult(): ScoreFormatter {
     return new TennisResult("Deuce", "");
   }
 }
@@ -107,7 +126,7 @@ class GameServer extends ScoreRule {
     return this.serverHasWon();
   }
 
-  formatResult(): TennisResult {
+  formatResult(): ScoreFormatter {
     return new TennisResult("Win for " + this.game.server, "");
   }
 }
@@ -122,7 +141,7 @@ class GameReceiver extends ScoreRule {
     return this.receiverHasWon();
   }
 
-  formatResult(): TennisResult {
+  formatResult(): ScoreFormatter {
     return new TennisResult("Win for " + this.game.receiver, "");
   }
 }
@@ -136,7 +155,7 @@ class AdvantageServer extends ScoreRule {
     return this.serverHasAdvantage();
   }
 
-  formatResult(): TennisResult {
+  formatResult(): ScoreFormatter {
     return new TennisResult("Advantage " + this.game.server, "");
   }
 }
@@ -147,7 +166,7 @@ class AdvantageReceiver extends ScoreRule {
     return receiverHasAdvantage;
   }
 
-  formatResult(): TennisResult {
+  formatResult(): ScoreFormatter {
     return new TennisResult("Advantage " + this.game.receiver, "");
   }
 }
@@ -159,7 +178,7 @@ class DefaultResult extends ScoreRule {
     return true;
   }
 
-  formatResult(): TennisResult {
+  formatResult(): ScoreFormatter {
     return new TennisResult(this.scores[this.game.serverScore], this.scores[this.game.receiverScore]);
   }
 }
