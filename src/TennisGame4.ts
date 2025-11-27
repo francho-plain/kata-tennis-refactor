@@ -76,11 +76,13 @@ class TennisResult {
   }
 }
 
+type NextResult = ScoreRule | GameServer | GameReceiver | AdvantageServer | AdvantageReceiver | DefaultResult;
+
 abstract class ScoreRule {
   protected readonly game: TennisGame4;
-  protected readonly nextResult: GameServer;
+  protected readonly nextResult: NextResult;
 
-  constructor(game: TennisGame4, nextResult: GameServer) {
+  constructor(game: TennisGame4, nextResult: NextResult) {
     this.game = game;
     this.nextResult = nextResult;
   }
@@ -106,19 +108,13 @@ class Deuce extends ScoreRule {
   }
 }
 
-class GameServer {
-  private readonly game: TennisGame4;
-  private readonly nextResult: GameReceiver;
-  constructor(game: TennisGame4, nextResult: GameReceiver) {
-    this.game = game;
-    this.nextResult = nextResult;
+class GameServer extends ScoreRule {
+  matches(): boolean {
+    return this.game.serverHasWon();
   }
 
-  getResult(): TennisResult {
-    if (this.game.serverHasWon()) {
-      return new TennisResult("Win for " + this.game.server, "");
-    }
-    return this.nextResult.getResult();
+  formatResult(): TennisResult {
+    return new TennisResult("Win for " + this.game.server, "");
   }
 }
 
