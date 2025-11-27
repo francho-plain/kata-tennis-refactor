@@ -76,19 +76,33 @@ class TennisResult {
   }
 }
 
-class Deuce {
-  private readonly game: TennisGame4;
-  private readonly nextResult: GameServer;
+abstract class ScoreRule {
+  protected readonly game: TennisGame4;
+  protected readonly nextResult: GameServer;
+
   constructor(game: TennisGame4, nextResult: GameServer) {
     this.game = game;
     this.nextResult = nextResult;
   }
 
+  abstract matches(): boolean;
+  abstract formatResult(): TennisResult;
+
   getResult(): TennisResult {
-    if (this.game.isDeuce()) {
-      return new TennisResult("Deuce", "");
+    if (this.matches()) {
+      return this.formatResult();
     }
     return this.nextResult.getResult();
+  }
+}
+
+class Deuce extends ScoreRule {
+  matches(): boolean {
+    return this.game.isDeuce();
+  }
+
+  formatResult(): TennisResult {
+    return new TennisResult("Deuce", "");
   }
 }
 
