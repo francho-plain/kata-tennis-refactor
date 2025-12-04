@@ -9,6 +9,17 @@ const ADVATAGE_PLAYER1_MARGIN = 1;
 const ADVATAGE_PLAYER2_MARGIN = -1;
 const WIN_MARGIN = 2;
 
+const LOVE_ALL = "Love-All";
+const FIFTEEN_ALL = "Fifteen-All";
+const THIRTY_ALL = "Thirty-All";
+const DEUCE = "Deuce";
+const LOVE_SCORE = "Love";
+const FIFTEEN_SCORE = "Fifteen";
+const THIRTY_SCORE = "Thirty";
+const FORTY_SCORE = "Forty";
+const ADVANTAGE = "Advantage";
+const WIN_FOR = "Win for";
+
 export class TennisGame6 implements TennisGame {
   private player2Name: string;
   private player1Name: string;
@@ -42,44 +53,46 @@ export class TennisGame6 implements TennisGame {
 
   private getTieScore(): string {
     if (this.player1Score === LOVE) {
-      return "Love-All";
+      return LOVE_ALL;
     }
     if (this.player1Score === FIFTEEN) {
-      return "Fifteen-All";
+      return FIFTEEN_ALL;
     }
     if (this.player1Score === THIRTY) {
-      return "Thirty-All";
+      return THIRTY_ALL;
     }
-    return "Deuce";
+    return DEUCE;
   }
 
   private getEndGameScore(): string {
     if (this.player1Score - this.player2Score === ADVATAGE_PLAYER1_MARGIN) {
-      return "Advantage " + this.player1Name;
+      return `${ADVANTAGE} ${this.player1Name}`;
     }
     if (this.player1Score - this.player2Score === ADVATAGE_PLAYER2_MARGIN) {
-      return "Advantage " + this.player2Name;
+      return `${ADVANTAGE} ${this.player2Name}`;
     }
     if (this.player1Score - this.player2Score >= WIN_MARGIN) {
-      return "Win for " + this.player1Name;
+      return `${WIN_FOR} ${this.player1Name}`;
     }
-    return "Win for " + this.player2Name;
+    return `${WIN_FOR} ${this.player2Name}`;
   }
 
   private getRegularScore(): string {
-    return `${this.scoreName(this.player1Score)}-${this.scoreName(this.player2Score)}`;
+    return `${this.scoreName(this.player1Score)}-${this.scoreName(
+      this.player2Score
+    )}`;
   }
 
   private scoreName(score: number): string {
     if (score === LOVE) {
-      return "Love";
+      return LOVE_SCORE;
     }
     if (score === FIFTEEN) {
-      return "Fifteen";
+      return FIFTEEN_SCORE;
     }
     if (score === THIRTY) {
-      return "Thirty";
+      return THIRTY_SCORE;
     }
-    return "Forty";
+    return FORTY_SCORE;
   }
 }
