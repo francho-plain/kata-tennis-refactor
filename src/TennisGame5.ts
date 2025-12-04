@@ -9,8 +9,8 @@ const DEUCE = "Deuce";
 
 
 export class TennisGame5 implements TennisGame {
-  private player2Name : string;
-  private player1Name : string;
+  private readonly player2Name : string;
+  private readonly player1Name : string;
   private player1Score: number;
   private player2Score: number;
 
@@ -68,9 +68,10 @@ export class TennisGame5 implements TennisGame {
   }
 
   wonPoint(playerName: string): void {
-    if (playerName === 'player1') {
+    if (playerName === this.player1Name) {
       this.player1Score += 1;
-    } else {
+    } 
+    if(playerName === this.player2Name) {
       this.player2Score += 1;
     }
   }
