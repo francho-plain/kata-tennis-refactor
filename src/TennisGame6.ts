@@ -23,17 +23,13 @@ export class TennisGame6 implements TennisGame {
   }
 
   getScore(): string {
-    let result: string;
-
     if (this.player1Score === this.player2Score) {
-      result = this.getTieScore();
-    } else if (this.player1Score >= GAME || this.player2Score >= GAME) {
-      result = this.getEndGameScore();
-    } else {
-      result = this.getRegularScore();
+      return this.getTieScore();
     }
-
-    return result;
+    if (this.player1Score >= GAME || this.player2Score >= GAME) {
+      return this.getEndGameScore();
+    }
+    return this.getRegularScore();
   }
 
   wonPoint(playerName: string): void {
@@ -47,50 +43,43 @@ export class TennisGame6 implements TennisGame {
   private getTieScore(): string {
     if (this.player1Score === LOVE) {
       return "Love-All";
-    } else if (this.player1Score === FIFTEEN) {
-      return "Fifteen-All";
-    } else if (this.player1Score === THIRTY) {
-      return "Thirty-All";
-    } else {
-      return "Deuce";
     }
+    if (this.player1Score === FIFTEEN) {
+      return "Fifteen-All";
+    }
+    if (this.player1Score === THIRTY) {
+      return "Thirty-All";
+    }
+    return "Deuce";
   }
 
   private getEndGameScore(): string {
-    let endGameScore: string;
-
     if (this.player1Score - this.player2Score === ADVATAGE_PLAYER1_MARGIN) {
-      endGameScore = "Advantage " + this.player1Name;
-    } else if (
-      this.player1Score - this.player2Score ===
-      ADVATAGE_PLAYER2_MARGIN
-    ) {
-      endGameScore = "Advantage " + this.player2Name;
-    } else if (this.player1Score - this.player2Score >= WIN_MARGIN) {
-      endGameScore = "Win for " + this.player1Name;
-    } else {
-      endGameScore = "Win for " + this.player2Name;
+      return "Advantage " + this.player1Name;
     }
-
-    return endGameScore;
+    if (this.player1Score - this.player2Score === ADVATAGE_PLAYER2_MARGIN) {
+      return "Advantage " + this.player2Name;
+    }
+    if (this.player1Score - this.player2Score >= WIN_MARGIN) {
+      return "Win for " + this.player1Name;
+    }
+    return "Win for " + this.player2Name;
   }
 
   private getRegularScore(): string {
-    const score1: string = this.scoreName(this.player1Score);
-    const score2: string = this.scoreName(this.player2Score);
-
-    return `${score1}-${score2}`;
+    return `${this.scoreName(this.player1Score)}-${this.scoreName(this.player2Score)}`;
   }
 
   private scoreName(score: number): string {
     if (score === LOVE) {
       return "Love";
-    } else if (score === FIFTEEN) {
-      return "Fifteen";
-    } else if (score === THIRTY) {
-      return "Thirty";
-    } else {
-      return "Forty";
     }
+    if (score === FIFTEEN) {
+      return "Fifteen";
+    }
+    if (score === THIRTY) {
+      return "Thirty";
+    }
+    return "Forty";
   }
 }
