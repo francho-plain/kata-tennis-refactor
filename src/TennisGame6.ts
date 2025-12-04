@@ -3,6 +3,7 @@ import { TennisGame } from "./TennisGame";
 const LOVE = 0;
 const FIFTEEN = 1;
 const THIRTY = 2;
+const GAME = 4;
 
 const ADVATAGE_PLAYER1_MARGIN = 1;
 const ADVATAGE_PLAYER2_MARGIN = -1;
@@ -26,7 +27,7 @@ export class TennisGame6 implements TennisGame {
 
     if (this.player1Score === this.player2Score) {
       result = this.getTieScore();
-    } else if (this.player1Score >= 4 || this.player2Score >= 4) {
+    } else if (this.player1Score >= GAME || this.player2Score >= GAME) {
       result = this.getEndGameScore();
     } else {
       result = this.getRegularScore();
@@ -75,29 +76,21 @@ export class TennisGame6 implements TennisGame {
   }
 
   private getRegularScore(): string {
-    let score1: string;
+    const score1: string = this.scoreName(this.player1Score);
+    const score2: string = this.scoreName(this.player2Score);
 
-    if (this.player1Score === LOVE) {
-      score1 = "Love";
-    } else if (this.player1Score === FIFTEEN) {
-      score1 = "Fifteen";
-    } else if (this.player1Score === THIRTY) {
-      score1 = "Thirty";
+    return `${score1}-${score2}`;
+  }
+
+  private scoreName(score: number): string {
+    if (score === LOVE) {
+      return "Love";
+    } else if (score === FIFTEEN) {
+      return "Fifteen";
+    } else if (score === THIRTY) {
+      return "Thirty";
     } else {
-      score1 = "Forty";
+      return "Forty";
     }
-
-    let score2: string;
-    if (this.player2Score === LOVE) {
-      score2 = "Love";
-    } else if (this.player2Score === FIFTEEN) {
-      score2 = "Fifteen";
-    } else if (this.player2Score === THIRTY) {
-      score2 = "Thirty";
-    } else {
-      score2 = "Forty";
-    }
-
-    return score1 + "-" + score2;
   }
 }
