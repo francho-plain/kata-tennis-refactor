@@ -1,8 +1,16 @@
-import { TennisGame } from './TennisGame';
+import { TennisGame } from "./TennisGame";
+
+const LOVE = 0;
+const FIFTEEN = 1;
+const THIRTY = 2;
+
+const ADVATAGE_PLAYER1_MARGIN = 1;
+const ADVATAGE_PLAYER2_MARGIN = -1;
+const WIN_MARGIN = 2;
 
 export class TennisGame6 implements TennisGame {
-  private player2Name : string;
-  private player1Name : string;
+  private player2Name: string;
+  private player1Name: string;
   private player1Score: number;
   private player2Score: number;
 
@@ -16,96 +24,80 @@ export class TennisGame6 implements TennisGame {
   getScore(): string {
     let result: string;
 
-    if (this.player1Score == this.player2Score)
-    {
-      // tie score
-      let tieScore: string;
-      switch (this.player1Score)
-      {
-        case 0:
-          tieScore = "Love-All";
-          break;
-        case 1:
-          tieScore = "Fifteen-All";
-          break;
-        case 2:
-          tieScore = "Thirty-All";
-          break;
-        default:
-          tieScore = "Deuce";
-          break;
-      }
-
-      result = tieScore;
-    }
-    else if (this.player1Score >= 4 || this.player2Score >= 4)
-    {
-      // end-game score
-      let endGameScore: string;
-
-      if (this.player1Score - this.player2Score == 1) {
-        endGameScore = "Advantage " + this.player1Name;
-      } else if (this.player1Score - this.player2Score == -1) {
-        endGameScore = "Advantage " + this.player2Name;
-      } else if (this.player1Score - this.player2Score >= 2) {
-        endGameScore = "Win for " + this.player1Name;
-      } else {
-        endGameScore = "Win for " + this.player2Name;
-      }
-
-      result = endGameScore;
-    }
-    else
-    {
-      // regular score
-      let regularScore: string;
-
-      let score1: string;
-
-      switch (this.player1Score) {
-        case 0:
-          score1 = "Love";
-          break;
-        case 1:
-          score1 = "Fifteen";
-          break;
-        case 2:
-          score1 = "Thirty";
-          break;
-        default:
-          score1 = "Forty";
-          break;
-      }
-
-      let score2: string;
-      switch (this.player2Score) {
-        case 0:
-          score2 = "Love";
-          break;
-        case 1:
-          score2 = "Fifteen";
-          break;
-        case 2:
-          score2 = "Thirty";
-          break;
-        default:
-          score2 = "Forty";
-          break;
-      }
-
-      regularScore = score1 + "-" + score2;
-
-      result = regularScore;
+    if (this.player1Score === this.player2Score) {
+      result = this.getTieScore();
+    } else if (this.player1Score >= 4 || this.player2Score >= 4) {
+      result = this.getEndGameScore();
+    } else {
+      result = this.getRegularScore();
     }
 
     return result;
-
   }
 
   wonPoint(playerName: string): void {
-    if (playerName === 'player1')
+    if (playerName === this.player1Name) {
       this.player1Score += 1;
-    else
+    } else {
       this.player2Score += 1;
+    }
+  }
+
+  private getTieScore(): string {
+    if (this.player1Score === LOVE) {
+      return "Love-All";
+    } else if (this.player1Score === FIFTEEN) {
+      return "Fifteen-All";
+    } else if (this.player1Score === THIRTY) {
+      return "Thirty-All";
+    } else {
+      return "Deuce";
+    }
+  }
+
+  private getEndGameScore(): string {
+    let endGameScore: string;
+
+    if (this.player1Score - this.player2Score === ADVATAGE_PLAYER1_MARGIN) {
+      endGameScore = "Advantage " + this.player1Name;
+    } else if (
+      this.player1Score - this.player2Score ===
+      ADVATAGE_PLAYER2_MARGIN
+    ) {
+      endGameScore = "Advantage " + this.player2Name;
+    } else if (this.player1Score - this.player2Score >= WIN_MARGIN) {
+      endGameScore = "Win for " + this.player1Name;
+    } else {
+      endGameScore = "Win for " + this.player2Name;
+    }
+
+    return endGameScore;
+  }
+
+  private getRegularScore(): string {
+    let score1: string;
+
+    if (this.player1Score === LOVE) {
+      score1 = "Love";
+    } else if (this.player1Score === FIFTEEN) {
+      score1 = "Fifteen";
+    } else if (this.player1Score === THIRTY) {
+      score1 = "Thirty";
+    } else {
+      score1 = "Forty";
+    }
+
+    let score2: string;
+    if (this.player2Score === LOVE) {
+      score2 = "Love";
+    } else if (this.player2Score === FIFTEEN) {
+      score2 = "Fifteen";
+    } else if (this.player2Score === THIRTY) {
+      score2 = "Thirty";
+    } else {
+      score2 = "Forty";
+    }
+
+    return score1 + "-" + score2;
   }
 }
